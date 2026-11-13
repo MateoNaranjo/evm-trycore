@@ -4,6 +4,7 @@ import { createActivity, deleteActivity, updateActivity } from './api/activities
 import { createProject, deleteProject } from './api/projects'
 import ActivityForm from './components/ActivityForm'
 import ActivityTable from './components/ActivityTable'
+import ActivityValueChart from './components/ActivityValueChart'
 import ProjectSelector from './components/ProjectSelector'
 import ProjectSummary from './components/ProjectSummary'
 import { useProjectDetail, useProjects } from './hooks/useProjects'
@@ -107,6 +108,7 @@ function App() {
       {project.data && (
         <>
           <ProjectSummary metrics={project.data.metrics} />
+          <ActivityValueChart activities={project.data.activities} />
           <ActivityForm
             key={editingActivity?.id ?? NEW_ACTIVITY_FORM_KEY}
             activity={editingActivity}
