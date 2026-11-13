@@ -17,10 +17,12 @@ Herramienta interna para que los líderes de proyecto registren el avance de sus
 ```
 backend/
   app/
-    api/        Endpoints REST (sin lógica de negocio)
-    services/   Casos de uso: orquestan repositorios y dominio
-    domain/     Cálculo EVM puro, sin dependencias de framework
-    core/       Configuración y conexión a base de datos
+    api/          Endpoints REST y manejo de errores (sin lógica de negocio)
+    schemas/      Contratos de request y response (Pydantic)
+    services/     Casos de uso: orquestan repositorio y dominio
+    domain/       Cálculo EVM puro, sin dependencias de framework
+    persistence/  Modelos ORM y repositorio
+    core/         Configuración y conexión a base de datos
   tests/
 db/init.sql     Script de inicialización de la base de datos
 frontend/       Dashboard React
