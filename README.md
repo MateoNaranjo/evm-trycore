@@ -8,7 +8,7 @@ Herramienta interna para que los líderes de proyecto registren el avance de sus
 |---|---|
 | Backend | Python 3.12+ · FastAPI · SQLAlchemy 2 |
 | Base de datos | PostgreSQL 17 |
-| Frontend | React 19 · Vite 6 |
+| Frontend | React 19 · Vite 6 · Recharts |
 | Pruebas | pytest · pytest-cov |
 | Linters | Ruff (backend) · ESLint (frontend) |
 
@@ -25,7 +25,13 @@ backend/
     core/         Configuración y conexión a base de datos
   tests/
 db/init.sql     Script de inicialización de la base de datos
-frontend/       Dashboard React
+db/seed.sql     Datos de demostración (1 proyecto, 4 actividades)
+frontend/
+  src/
+    api/          Cliente HTTP del backend
+    hooks/        Carga de datos
+    components/   Selector, indicadores, semáforo, gráfica, tabla y formulario
+    utils/        Formato e interpretación de indicadores
 ```
 
 ## Requisitos
@@ -43,6 +49,7 @@ frontend/       Dashboard React
 ```bash
 psql -U postgres -c "CREATE DATABASE evm_db;"
 psql -U postgres -d evm_db -f db/init.sql
+psql -U postgres -d evm_db -f db/seed.sql     # opcional: datos de demostración
 ```
 
 **Opción B — Docker**
@@ -51,7 +58,9 @@ psql -U postgres -d evm_db -f db/init.sql
 docker compose up -d
 ```
 
-El contenedor ejecuta `db/init.sql` automáticamente la primera vez.
+El contenedor ejecuta `db/init.sql` y `db/seed.sql` automáticamente la primera vez.
+
+El seed es idempotente: si el proyecto de demostración ya existe, no inserta nada.
 
 ### 2. Backend
 
@@ -78,6 +87,38 @@ npm run dev
 ```
 
 Dashboard: http://localhost:5173
+
+## API
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/projects` | Lista proyectos con sus indicadores consolidados |
+| POST | `/api/projects` | Crea un proyecto |
+| GET | `/api/projects/{id}` | Proyecto con actividades, indicadores por actividad y consolidado |
+| PUT | `/api/projects/{id}` | Edita un proyecto |
+| DELETE | `/api/projects/{id}` | Elimina un proyecto y sus actividades |
+| POST | `/api/projects/{id}/activities` | Crea una actividad |
+| PUT | `/api/projects/{id}/activities/{activityId}` | Edita una actividad |
+| DELETE | `/api/projects/{id}/activities/{activityId}` | Elimina una actividad |
+
+Errores: `404` si el recurso no existe, `422` si los datos no cumplen las validaciones.
+
+## Cálculo EVM
+
+| Indicador | Fórmula |
+|---|---|
+| PV | % planificado × BAC |
+| EV | % completado × BAC |
+| CV | EV − AC |
+| SV | EV − PV |
+| CPI | EV / AC |
+| SPI | EV / PV |
+| EAC | BAC / CPI |
+| VAC | BAC − EAC |
+
+- **Consolidado del proyecto:** se suman BAC, PV, EV y AC de las actividades y luego se aplican las fórmulas. No se promedian los índices, para que cada actividad pese según su presupuesto.
+- **Divisiones no definidas:** si AC, PV o CPI son cero, el índice correspondiente (y EAC/VAC cuando aplica) se devuelve como `null` con estado `NOT_AVAILABLE`.
+- **Redondeo:** se calcula con precisión decimal completa y se redondea al final (2 decimales para dinero, 4 para índices).
 
 ## Pruebas y calidad
 
