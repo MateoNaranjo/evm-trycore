@@ -267,6 +267,13 @@ select {
   color: var(--color-bad);
 }
 
+/* Gráfica */
+.chart__guide {
+  margin: 0 0 1rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
 /* Formulario de actividad */
 .activity-form__fields {
   display: grid;

@@ -11,6 +11,7 @@ const indexFormatter = new Intl.NumberFormat(LOCALE, {
   maximumFractionDigits: 4,
 })
 const percentageFormatter = new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 2 })
+const compactFormatter = new Intl.NumberFormat(LOCALE, { notation: 'compact' })
 
 function formatOrEmpty(value, format) {
   return value === null || value === undefined ? EMPTY_VALUE : format(value)
@@ -21,6 +22,10 @@ export function formatMoney(value) {
     const sign = amount < 0 ? '-' : ''
     return `${sign}$${moneyFormatter.format(Math.abs(amount))}`
   })
+}
+
+export function formatCompactMoney(value) {
+  return formatOrEmpty(value, (amount) => `$${compactFormatter.format(amount)}`)
 }
 
 export function formatIndex(value) {
