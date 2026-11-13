@@ -1,0 +1,27 @@
+[project]
+name = "evm-tracker-backend"
+version = "1.0.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# E/F: errores básicos, I: orden de imports, N: nombres, B: bugs comunes,
+# UP: sintaxis moderna, SIM: simplificaciones, PL: reglas de pylint (incluye números mágicos),
+# ERA: código comentado, ARG: argumentos sin usar, RET: returns innecesarios
+select = ["E", "F", "I", "N", "B", "UP", "SIM", "PL", "ERA", "ARG", "RET"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["app/domain", "app/services"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
