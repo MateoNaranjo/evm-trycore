@@ -2,6 +2,8 @@
 
 Herramienta interna para que los líderes de proyecto registren el avance de sus actividades y vean, en tiempo real, si el proyecto va bien o mal en cronograma y presupuesto usando la metodología de Valor Ganado (Earned Value Management).
 
+La arquitectura, las decisiones técnicas y los conceptos usados se explican en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
+
 ## Stack
 
 | Capa | Tecnología |
